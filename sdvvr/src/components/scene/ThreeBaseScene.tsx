@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import * as THREE from 'three';
 
 import { ThreeContext, ThreeContextValue } from '../../contexts/Contexts';
 import { OrbitControls } from '../../utils/three/OrbitControls';
+import { VRButton } from '../../utils/three/VRButton';
 import { ThreeObject } from '../../types/Three';
 
 
@@ -115,6 +117,7 @@ const ThreeBaseScene: React.FC<Props> = (props: Props) => {
       update(clock.getDelta());
       renderer.render(scene, camera);
     })
+    ReactDOM.render(<div id='vr_button'/>, document.body.appendChild(VRButton.createButton( renderer )));
   }, [container, clock, renderer, scene, camera])
 
   useEffect(() => {
@@ -128,6 +131,7 @@ const ThreeBaseScene: React.FC<Props> = (props: Props) => {
         style={{ width: contextValue.width, height: contextValue.height }}
         ref={(container) => { setContainer(container) }}
       />
+      <div id='vr_button'/>
     </div>
   )
 }

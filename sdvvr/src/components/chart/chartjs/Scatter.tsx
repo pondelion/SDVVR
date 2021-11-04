@@ -70,9 +70,9 @@ export class Scatter extends React.Component<Props> {
 
   render() {
     return (
-      <StyledChart>
+      // <StyledChart>
         <ChartScatter data={this._data} redraw />
-      </StyledChart>
+      // </StyledChart>
     )
   }
 }

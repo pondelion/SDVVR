@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       flexGrow: 1,
-      padding: theme.spacing(3),
+      padding: theme.spacing(2),
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -134,10 +134,10 @@ export default function PersistentDrawerLeft() {
         </div>
         <Divider />
         <List>
-          <Link to="/" style={{ color: '#FFF' }}>
+          <Link to="/physical_simulation" style={{ color: '#FFF' }}>
             <ListItem button key="main_key">
               <ListItemIcon><ListAltIcon/></ListItemIcon>
-              <ListItemText primary="Dashbord" />
+              <ListItemText primary="Physical Simulation" />
             </ListItem>
           </Link>
         </List>
