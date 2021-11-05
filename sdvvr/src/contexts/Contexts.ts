@@ -1,15 +1,15 @@
 import React from 'react';
 import * as THREE from 'three';
-import { PosVec3, ThreeObjects } from '../types/Three';
+import { Vec3, ThreeObjects } from '../types/Three';
 import { Parameter } from '../types/Parameter';
 
 
 export type ThreeContextValue = {
   width: number,
   height: number,
-  cameraPos: PosVec3,
+  cameraPos: Vec3,
   onObjectsChanged?: (objs: ThreeObjects) => void,
-  lookAt?: PosVec3,
+  lookAt?: Vec3,
   bgColor?: THREE.Color,
   onUpdate?: (dt: number) => void,
   objects?: ThreeObjects,

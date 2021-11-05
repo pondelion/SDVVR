@@ -72,7 +72,7 @@ export class ObjectFactory {
     pos_x: number = 0,
     pos_y: number = 0,
     pos_z: number = 0,
-    rotation_x: number = -0.5*Math.PI, 
+    rotation_x: number = -0.5*Math.PI,
     rotation_y: number = 0,
     rotation_z: number = 0,
     opacity: number = 1.0,
@@ -121,7 +121,7 @@ export class ObjectFactory {
   ): THREE.ArrowHelper {
     const dir = new THREE.Vector3(dir_x, dir_y, dir_z);
     const pos = new THREE.Vector3(pos_x, pos_y, pos_z);
-    const arrowHelper = new THREE.ArrowHelper(dir, pos, length, color, 
+    const arrowHelper = new THREE.ArrowHelper(dir, pos, length, color,
                                               headWidth, headLength);
     arrowHelper.name = name;
     arrowHelper.rotation.x = rotation_x;

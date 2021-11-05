@@ -1,21 +1,23 @@
 import * as THREE from 'three';
 
 
-export type PosVec2 = {
+export type Vec2 = {
   x: number,
   y: number,
 };
 
-export type PosVec3 = {
+export type Vec3 = {
   x: number,
   y: number,
   z: number,
 };
 
+export type ObjectType = 'box' | 'sphere' | 'plane' | 'sprite' | 'arrow' | 'other';
+
 export type ThreeObject = {
   tag?: string,
   obj: THREE.Mesh | THREE.ArrowHelper | THREE.Sprite,
-  objType: 'box' | 'sphere' | 'plane' | 'sprite' | 'arrow' | 'other',
+  objType: ObjectType,
 }
 
 export type ThreeObjects = ThreeObject[];

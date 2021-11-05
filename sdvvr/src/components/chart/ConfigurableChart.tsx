@@ -121,10 +121,18 @@ const headerWidgets = (
         <InputLabel htmlFor="chart-type-select">X</InputLabel>
         {xyzSelect("variable_x", variableX, setVariableX)}
       </Grid>
-      <Grid item xs={s as GridSize}>
-        <InputLabel htmlFor="chart-type-select">Y</InputLabel>
-        {xyzSelect("variable_y", variableY, setVariableY)}
-      </Grid>
+      {
+        (() => {
+          if (chartType !== "HISTOGRAM") {
+            return (
+              <Grid item xs={s as GridSize}>
+                <InputLabel htmlFor="chart-type-select">Y</InputLabel>
+                {xyzSelect("variable_y", variableY, setVariableY)}
+              </Grid>
+            )
+          }
+        })()
+      }
       {
         (() => {
           if (numVariables === 3) {
