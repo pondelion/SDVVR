@@ -1,16 +1,18 @@
 import * as THREE from 'three';
 
 
-export type Vec2 = {
-  x: number,
-  y: number,
-};
+// export type Vec2 = {
+//   x: number,
+//   y: number,
+// };
+export type Vec2 = THREE.Vector2
 
-export type Vec3 = {
-  x: number,
-  y: number,
-  z: number,
-};
+// export type Vec3 = {
+//   x: number,
+//   y: number,
+//   z: number,
+// };
+export type Vec3 = THREE.Vector3
 
 export type ObjectType = 'box' | 'sphere' | 'plane' | 'sprite' | 'arrow' | 'other';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -8,9 +8,11 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@mui/material/Slider';
+import Checkbox from '@mui/material/Checkbox';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import clone from 'clone';
 
-import { Parameter, ParameterType } from '../../types/Parameter';
+import { Parameter } from '../../types/Parameter';
 import { ParameterContext, ParameterContextValue } from '../../contexts/Contexts';
 
 
@@ -32,7 +34,7 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <Box p={0}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -54,12 +56,31 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const createParameterWidgets = (params: Parameter[], category: string) => {
+const createParameterWidgets = (
+  params: Parameter[],
+  category: string,
+  contextValue: ParameterContextValue,
+  autoApply: boolean,
+) => {
   const categoryParams = params.filter(v => v.category === category);
+
+  const paramChanged = (e: any) => {
+    console.log(`new value : ${category} : ${e.target.name} : ${e.target.value}`);
+    for (let i = 0; i < params.length; ++i) {
+      if (params[i].category === category && params[i].id === e.target.name) {
+        params[i].value = e.target.value;
+        // setUpdatedParams(updatedParams);
+        if (contextValue.onParameterChaneged !== undefined) {
+          contextValue.onParameterChaneged(params, autoApply);
+        }
+        break;
+      }
+    }
+  }
 
   return categoryParams.map(v => {
     return (
-      <Paper style={{marginBottom: "10px", paddingLeft: "10px", paddingRight: "20px"}}>
+      <Paper style={{marginBottom: "10px", paddingTop: "20px", paddingLeft: "20px", paddingRight: "25px"}}>
         <Typography>{v.name}</Typography>
         {
           (() => {
@@ -68,16 +89,17 @@ const createParameterWidgets = (params: Parameter[], category: string) => {
                 <TextField
                   id={v.id}
                   label={v.id}
+                  name={v.id}
                   // style={{ marginLeft: 8, marginRight: 8 }}
-                  placeholder={ v.defaultValue as string }
-                  defaultValue={ v.defaultValue as string }
+                  placeholder={ v.value as string }
+                  defaultValue={ v.value as string }
                   // fullWidth
                   margin="normal"
                   InputLabelProps={{
                     shrink: true,
                   }}
                   variant="outlined"
-                  onChange={(event: any) => { }}
+                  onChange={paramChanged}
                 />
               )
             } else if (v.parameterType === "SLIDER_FLOAT") {
@@ -85,23 +107,27 @@ const createParameterWidgets = (params: Parameter[], category: string) => {
               const minValue = v.minValue ? v.minValue : 0;
               return (
                 <Slider
-                  defaultValue={v.defaultValue as number}
+                  name={v.id}
+                  defaultValue={v.value as number}
                   min={minValue}
                   max={maxValue}
                   step={0.002*(maxValue-minValue)}
                   aria-label="Default"
                   valueLabelDisplay="auto"
+                  onChange={paramChanged}
                   // style={{ marginLeft: "20px", paddingRight: "30px" }}
                 />
               )
             } else if (v.parameterType === "SLIDER_INT") {
               return (
                 <Slider
-                  defaultValue={v.defaultValue as number}
+                  name={v.id}
+                  defaultValue={v.value as number}
                   min={v.minValue}
                   max={v.maxValue}
                   aria-label="Default"
                   valueLabelDisplay="auto"
+                  onChange={paramChanged}
                   // style={{ marginLeft: "20px", paddingRight: "30px" }}
                 />
               )
@@ -119,13 +145,19 @@ type Props = {
 const ParameterSettingsTab: React.FC<Props> = (props: Props) => {
 
   const contextValue = React.useContext(ParameterContext);
+  const [autoApply, setAutoApply] = useState<boolean>(true);
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleTagChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+
+  const paramsCp = clone(contextValue.params);
+  const [updatedParams, setUpdatedParams] = useState<Parameter[]>(paramsCp);
+  console.log(paramsCp)
+  console.log(updatedParams)
 
   const uniqueCategories = Array.from((new Set(
     contextValue.params.map(v => v.category)
@@ -141,7 +173,7 @@ const ParameterSettingsTab: React.FC<Props> = (props: Props) => {
       <AppBar position="static">
         <Tabs
           value={value}
-          onChange={handleChange}
+          onChange={handleTagChange}
           variant="scrollable"
           scrollButtons="auto"
           aria-label="simple tabs example"
@@ -161,15 +193,17 @@ const ParameterSettingsTab: React.FC<Props> = (props: Props) => {
         uniqueCategories.map((category, idx) => {
           return (
             <TabPanel value={value} index={idx}>
-              <div style={{overflowY: 'scroll', height: 0.48*window.innerHeight, margin: '0px'}}>
-              {createParameterWidgets(contextValue.params, category)}
+              <div style={{overflowY: 'scroll', height: 0.52*window.innerHeight, margin: '0px'}}>
+              {createParameterWidgets(
+                contextValue.params, category, contextValue, autoApply
+              )}
               </div>
             </TabPanel>
           )
         })
       }
       <TabPanel value={value} index={uniqueCategories.length}>
-        <div style={{overflowY: 'scroll', height: 0.48*window.innerHeight, margin: '0px'}}>
+        <div style={{overflowY: 'scroll', height: 0.52*window.innerHeight, margin: '0px'}}>
           <div><Button>tab111</Button></div>
           <div><Button>tab111</Button></div>
           <div><Button>tab111</Button></div>
@@ -196,7 +230,13 @@ const ParameterSettingsTab: React.FC<Props> = (props: Props) => {
           <div><Button>tab111</Button></div>
         </div>
       </TabPanel>
-      <Button variant='contained'>Apply Settings</Button>
+      <Checkbox
+        checked={autoApply}
+        id="auto_apply_check"
+        onChange={e => {setAutoApply(e.target.checked)}}
+      />
+      Auto Apply
+      <Button variant='contained' style={{'float': "right", marginTop: "10px"}}>Apply Settings</Button>
     </div>
   )
 }

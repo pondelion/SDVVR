@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 import { Object } from '../../../types/ObjectConfig';
 
 
@@ -5,10 +7,10 @@ export const FreeFallingObjects: Object[] = [
   {
     "name": "ball1",
     "objType": "sphere",
-    "pos": {x: 0.0, y: 0.0, z: 10.0},
-    "vel": {x: 0.0, y: 0.0, z: 0.0},
-    "rotation": {x: 0.0, y: 0.0, z: 0.0},
-    "scale": {x: 1.0, y: 1.0, z: 1.0},
+    "pos": new THREE.Vector3(0.0, 5.0, 0.0),
+    "vel": new THREE.Vector3(0.0, 0.0, 0.0),
+    "rotation": new THREE.Vector3(0.0, 0.0, 0.0),
+    "scale": new THREE.Vector3(0.5, 0.5, 0.5),
     "color": "#FF0000",
     "mass": 1.0,
     "opacity": 0.8,
@@ -16,10 +18,10 @@ export const FreeFallingObjects: Object[] = [
   {
     "name": "ground1",
     "objType": "plane",
-    "pos": {x: 0.0, y: 0.0, z: 0.0},
-    "vel": {x: 0.0, y: 0.0, z: 0.0},
-    "rotation": {x: -0.5*Math.PI, y: 0.0, z: 0.0},
-    "scale": {x: 10.0, y: 10.0, z: 1.0},
+    "pos": new THREE.Vector3(0.0, 0.0, 0.0),
+    "vel": new THREE.Vector3(0.0, 0.0, 0.0),
+    "rotation": new THREE.Vector3(-0.5*Math.PI, 0.0, 0.0),
+    "scale": new THREE.Vector3(20.0, 1.0, 20.0),
     "color": "#0xffffff",
     "mass": 1.0,
     "opacity": 0.6,

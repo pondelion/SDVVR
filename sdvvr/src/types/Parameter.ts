@@ -14,7 +14,7 @@ export type Parameter = {
   name: string,
   id: string,
   parameterType: ParameterType,
-  defaultValue?: number | string | boolean,
+  value?: number | string | boolean,
   minValue?: number,
   maxValue?: number
 }
