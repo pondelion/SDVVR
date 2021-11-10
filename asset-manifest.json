@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/SDVVR/static/css/main.6dea0f05.chunk.css",
-    "main.js": "/SDVVR/static/js/main.10eaed13.chunk.js",
-    "main.js.map": "/SDVVR/static/js/main.10eaed13.chunk.js.map",
+    "main.js": "/SDVVR/static/js/main.220a242b.chunk.js",
+    "main.js.map": "/SDVVR/static/js/main.220a242b.chunk.js.map",
     "runtime-main.js": "/SDVVR/static/js/runtime-main.246c17ba.js",
     "runtime-main.js.map": "/SDVVR/static/js/runtime-main.246c17ba.js.map",
-    "static/js/2.078b3ee4.chunk.js": "/SDVVR/static/js/2.078b3ee4.chunk.js",
-    "static/js/2.078b3ee4.chunk.js.map": "/SDVVR/static/js/2.078b3ee4.chunk.js.map",
+    "static/js/2.395e80da.chunk.js": "/SDVVR/static/js/2.395e80da.chunk.js",
+    "static/js/2.395e80da.chunk.js.map": "/SDVVR/static/js/2.395e80da.chunk.js.map",
     "static/js/3.4911e653.chunk.js": "/SDVVR/static/js/3.4911e653.chunk.js",
     "static/js/3.4911e653.chunk.js.map": "/SDVVR/static/js/3.4911e653.chunk.js.map",
     "index.html": "/SDVVR/index.html",
     "static/css/main.6dea0f05.chunk.css.map": "/SDVVR/static/css/main.6dea0f05.chunk.css.map",
-    "static/js/2.078b3ee4.chunk.js.LICENSE.txt": "/SDVVR/static/js/2.078b3ee4.chunk.js.LICENSE.txt"
+    "static/js/2.395e80da.chunk.js.LICENSE.txt": "/SDVVR/static/js/2.395e80da.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.246c17ba.js",
-    "static/js/2.078b3ee4.chunk.js",
+    "static/js/2.395e80da.chunk.js",
     "static/css/main.6dea0f05.chunk.css",
-    "static/js/main.10eaed13.chunk.js"
+    "static/js/main.220a242b.chunk.js"
   ]
 }
