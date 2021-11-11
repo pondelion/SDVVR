@@ -236,7 +236,7 @@ const ParameterSettingsTab: React.FC<Props> = (props: Props) => {
         onChange={e => {setAutoApply(e.target.checked)}}
       />
       Auto Apply
-      <Button variant='contained' style={{'float': "right", marginTop: "10px"}}>Apply Settings</Button>
+      <Button variant='contained' style={{'float': "right", marginTop: "10px"}}>Apply</Button>
     </div>
   )
 }

@@ -5,19 +5,48 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Grid, { GridSize } from '@material-ui/core/Grid';
 
 import { ChartType, ChartTypeList } from '../../types/Chart';
-import Scatter from './chartjs/Scatter';
+import { Scatter2D, DataType2D } from './chartjs/Scatter';
+import { ChartContext, ChartContextValue } from '../../contexts/Contexts';
+import { BaseSystem } from '../../simulator/systems/BaseSystem';
+
+
+export type ConfigurableChartData = {
+  [variable: string]: number[]
+}
 
 
 export interface Props {
-  data: any,
+  data: ConfigurableChartData,
   variables: string[],
+  tag: string,
 };
 
 
-const chart = (chartType: ChartType|null) => {
-  return (
-    <Scatter></Scatter>
-  )
+const chart = (
+  chartType: ChartType|null,
+  data: ConfigurableChartData,
+  variableX: string, variableY: string, variableZ: string,
+  tag: string,
+) => {
+  let data_ = [];
+  if (variableX !== undefined && variableY !== undefined && variableZ !== undefined) {
+    data_ = convertChartDataFormat(data, variableX, variableY, variableZ);
+  } else if (variableX !== undefined && variableY !== undefined) {
+    data_ = convertChartDataFormat(data, variableX, variableY);
+  }
+  if (chartType === "SCATTER_2D") {
+    return (
+      <Scatter2D
+        data={data_}
+        tag={tag}
+      >
+      </Scatter2D>
+    )
+  } else {
+    return (
+      <div style={{'color': "#FF0000"}}>Not Implemented</div>
+    )
+  }
 }
 
 const numSelectableVariables = (chartType: ChartType|null|""): number => {
@@ -25,6 +54,8 @@ const numSelectableVariables = (chartType: ChartType|null|""): number => {
     return 0;
   } else if (chartType === "LINE_3D" || chartType === "SCATTER_3D") {
     return 3;
+  } else if (chartType === "HISTOGRAM") {
+    return 1;
   } else {
     return 2;
   }
@@ -150,14 +181,56 @@ const headerWidgets = (
 }
 
 
+export const convertChartDataFormat = (
+  data: ConfigurableChartData,
+  x_variable: string,
+  y_variable?: string,
+  z_variable?: string
+) => {
+  return data[x_variable].map((v, idx) => {
+    let d: any = {}
+    d["x"] = v;
+    if (y_variable) {
+      d["y"] = data[y_variable][idx];
+    }
+    if (z_variable) {
+      d["z"] = data[z_variable][idx];
+    }
+    return d;
+  })
+}
+
+
 const ConfigurableChart: React.FC<Props> = (props: Props) => {
 
-  const [chartType, setChartType] = useState<ChartType|null>(null);
+  const [chartType, setChartType] = useState<ChartType|null>("SCATTER_2D");
   const [variableX, setVariableX] = useState<string>(props.variables[0]);
   const [variableY, setVariableY] = useState<string>(props.variables[0]);
   const [variableZ, setVariableZ] = useState<string>(props.variables[0]);
 
+  const contextValue = React.useContext(ChartContext);
+
   const nv = numSelectableVariables(chartType);
+
+  if (contextValue !== undefined &&
+      contextValue.onSceneUpdateChartCallbacks !== undefined) {
+    const onSceneUpdate = contextValue.onSceneUpdateChartCallbacks;
+    onSceneUpdate[props.tag] = (dt: number, simulator?: BaseSystem) => {
+      if (contextValue !== undefined &&
+          contextValue.chartRefs !== undefined &&
+          contextValue.chartRefs[props.tag] &&
+          simulator !== undefined) {
+        let data_ = [];
+        if (variableX !== undefined && variableY !== undefined && variableZ !== undefined) {
+          data_ = convertChartDataFormat(simulator.historicalData(), variableX, variableY, variableZ);
+        } else if (variableX !== undefined && variableY !== undefined) {
+          data_ = convertChartDataFormat(simulator.historicalData(), variableX, variableY);
+        }
+        (contextValue.chartRefs[props.tag] as any).data.datasets[0].data = data_;//[{'x': Math.random(), 'y': Math.random()}];
+        (contextValue.chartRefs[props.tag] as any).update();
+      }
+    }
+  }
 
   return (
     <div>
@@ -166,7 +239,7 @@ const ConfigurableChart: React.FC<Props> = (props: Props) => {
         variableX, variableY, variableZ,
         setVariableX, setVariableY, setVariableZ
       )}
-      {chart(chartType)}
+      {chart(chartType, props.data, variableX, variableY, variableZ, props.tag)}
     </div>
   )
 }

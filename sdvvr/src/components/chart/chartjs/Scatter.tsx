@@ -1,6 +1,7 @@
 import React from 'react';
 import { Scatter as ChartScatter } from 'react-chartjs-2';
 import styled from 'styled-components';
+import { ChartContext, ChartContextValue } from '../../../contexts/Contexts';
 
 
 const StyledChart = styled.div`
@@ -10,71 +11,71 @@ const StyledChart = styled.div`
   width: 40%;
 `
 
-interface Data {
+interface Data2D {
   x: number,
   y: number,
 };
 
-export type DataType = Data[];
+export type DataType2D = Data2D[];
 
-type Props= {}
-
-export class Scatter extends React.Component<Props> {
-
-  private _data: any = null;
-
-  constructor(props: Props) {
-    super(props);
-
-    this._data = {
-      labels: ['Scatter'],
-      datasets: [
-        {
-          label: 'scatter',
-          fill: true,
-          backgroundColor: 'rgba(75,192,192,0.4)',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 2,
-          pointHoverRadius: 1,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 5,
-          pointHitRadius: 5,
-          data: [
-            { x: 0, y: 0 },
-          ]
-        }
-      ]
-    };
-
-  }
-
-  componentDidMount(): void {
-    this._data.datasets[0].data = [
-      {x: 0, y: 0},
-      {x: 1, y: 1},
-      {x: 2, y: 2},
-      {x: 3, y: 3},
-      {x: 4, y: 4},
-    ];
-
-    this.forceUpdate();
-  }
-
-  setData(data: DataType) {
-    this._data.datasets[0].data = data;
-    this.forceUpdate();
-  }
-
-  render() {
-    return (
-      // <StyledChart>
-        <ChartScatter data={this._data} redraw />
-      // </StyledChart>
-    )
-  }
+type Props= {
+  data: DataType2D,
+  tag: string
 }
 
-export default Scatter;
+
+export const Scatter2D: React.FC<Props> = (props: Props) => {
+
+  const chartContextValue = React.useContext(ChartContext);
+
+  const data = {
+    labels: ['Scatter'],
+    datasets: [
+      {
+        label: 'data',
+        fill: true,
+        backgroundColor: 'rgba(75,192,192,0.4)',
+        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBackgroundColor: '#fff',
+        pointBorderWidth: 2,
+        pointHoverRadius: 1,
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBorderColor: 'rgba(220,220,220,1)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 2,
+        pointHitRadius: 5,
+        data: props.data,
+      }
+    ]
+  };
+  const options = {
+    responsive: true,
+    legend: {
+      display: true
+    },
+    animation: {
+      duration: 0
+    }
+  }
+
+  return (
+    // <StyledChart>
+      <ChartScatter
+        data={data}
+        options={options}
+        redraw={true}
+        ref={(ref) => {
+          if (chartContextValue.chartRefs !== undefined && chartContextValue.setChartRefs !== undefined) {
+            const refs: any = chartContextValue.chartRefs;
+            refs[props.tag] = ref;
+            chartContextValue.setChartRefs(refs);
+            console.log(refs);
+          }
+        }}
+      />
+    // </StyledChart>
+  )
+
+}
+
+// export default Scatter;

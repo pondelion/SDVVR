@@ -56,6 +56,19 @@ export const createThreeObjectsFromConfig = (objs: Object[]): ThreeObject[] => {
         ),
         objType: obj.objType
       })
+    } else if (obj.objType === "box") {
+      threeObjs.push({
+        tag: obj.name,
+        obj: OF.createBox(
+          obj.pos.x, obj.pos.y, obj.pos.z,
+          obj.scale.x, obj.scale.y, obj.scale.z,
+          obj.opacity,
+          obj.color,
+          THREE.DoubleSide,
+          obj.textureFilepath
+        ),
+        objType: obj.objType
+      })
     }
 
   });
@@ -124,6 +137,9 @@ const ThreeBaseScene: React.FC<Props> = (props: Props) => {
   const update = (dt: number): void => {
     if (contextValue.onUpdate) {
       contextValue.onUpdate(dt);
+    }
+    if (contextValue.onUpdateChart) {
+      contextValue.onUpdateChart(dt);
     }
   }
 

@@ -1,3 +1,4 @@
+import { Scatter as ChartJSScatter } from 'react-chartjs-2';
 
 
 export type ChartType =
@@ -15,3 +16,5 @@ export const ChartTypeList = [
   "LINE_3D",
   "HISTOGRAM"
 ]
+
+export type ChartJSType = typeof ChartJSScatter;

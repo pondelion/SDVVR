@@ -134,10 +134,10 @@ export default function PersistentDrawerLeft() {
         </div>
         <Divider />
         <List>
-          <Link to="/physical_simulation" style={{ color: '#FFF' }}>
+          <Link to="/simulation" style={{ color: '#FFF' }}>
             <ListItem button key="main_key">
               <ListItemIcon><ListAltIcon/></ListItemIcon>
-              <ListItemText primary="Physical Simulation" />
+              <ListItemText primary="Simulation" />
             </ListItem>
           </Link>
         </List>

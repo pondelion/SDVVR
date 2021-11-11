@@ -1,7 +1,7 @@
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { darkTheme } from './theme/MaterialUI';
-import PhysicalSimulation from './pages/PhysicalSimulation';
+import Simulation from './pages/Simulation';
 
 
 function App() {
@@ -10,10 +10,10 @@ function App() {
       <MuiThemeProvider theme={darkTheme}>
         <Router basename={process.env.PUBLIC_URL}>
           <Switch>
-            <Route path="/" component={PhysicalSimulation} exact />
+            <Route path="/" component={Simulation} exact />
           </Switch>
           <Switch>
-            <Route path="/physical_simulation" component={PhysicalSimulation} exact />
+            <Route path="/simulation" component={Simulation} exact />
           </Switch>
         </Router>
       </MuiThemeProvider>

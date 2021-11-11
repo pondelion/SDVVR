@@ -13,8 +13,12 @@ export class BouncingBallSystem extends BaseSystem {
   private _groundHeightIdx: number;
   private _restitutionCoeffIdx: number;
   private _airRessistanceCoefIdx: number;
-  private _initialHeight: number;
+  private _initialHeightIdx: number;
   private _massIdx: number;
+
+  private _ballPosys: number[] = [];
+  private _ballVelys: number[] = [];
+  private _energies: number[] = [];
 
   constructor() {
     super(FreeFallingObjects, FreeFallingParameters);
@@ -26,7 +30,7 @@ export class BouncingBallSystem extends BaseSystem {
     this._ballRadiusIdx = this.findParamIndex("ball_radius");
     this._restitutionCoeffIdx = this.findParamIndex("restitution_coefficient");
     this._airRessistanceCoefIdx = this.findParamIndex("air_resistance_coefficient");
-    this._initialHeight = this.findParamIndex("initial_height");
+    this._initialHeightIdx = this.findParamIndex("initial_height");
     this._massIdx = this.findParamIndex("ball_mass");
     this.reset();
   }
@@ -48,7 +52,18 @@ export class BouncingBallSystem extends BaseSystem {
       this._objStates[this._ballObjIdx].pos.y = groundHeight + ballRadius;
       this._objStates[this._ballObjIdx].vel.y *= -restitutionCoeff;
     }
-    // console.log(this._objStates[this._ballObjIdx].pos.y);
+    this._ballPosys.push(this._objStates[this._ballObjIdx].pos.y);
+    if (this._ballPosys.length > this.MAX_QUEUE) {
+      this._ballPosys.shift();
+    }
+    this._ballVelys.push(this._objStates[this._ballObjIdx].vel.y);
+    if (this._ballVelys.length > this.MAX_QUEUE) {
+      this._ballVelys.shift();
+    }
+    this._energies.push(this.energy());
+    if (this._energies.length > this.MAX_QUEUE) {
+      this._energies.shift();
+    }
   }
 
   getStates(t?: number): ObjectState[] {
@@ -72,18 +87,34 @@ export class BouncingBallSystem extends BaseSystem {
   }
 
   private gravitationalForce(): number {
-    // Fy = -mg
+    // Fy = -mg - k*vy^2
     const mass = this._systemParams[this._massIdx].value as number;
     const gaCoef = this._systemParams[this._gaCoefIdx].value as number;
     const airRessistanceCoef = this._systemParams[this._airRessistanceCoefIdx].value as number;
-    return -mass*gaCoef - airRessistanceCoef*this._objStates[this._ballObjIdx].vel.y;
+    return -mass*gaCoef - airRessistanceCoef*this._objStates[this._ballObjIdx].vel.y**2;
+  }
+
+  private energy(): number {
+    const mass = this._systemParams[this._massIdx].value as number;
+    const gaCoef = this._systemParams[this._gaCoefIdx].value as number;
+    return 0.5*mass*this._objStates[this._ballObjIdx].vel.y**2 + mass*gaCoef*this._objStates[this._ballObjIdx].pos.y
   }
 
   override reset(): void {
     super.reset();
     if (this._ballObjIdx !== undefined) {
-      this._objStates[this._ballObjIdx].pos.y = this._systemParams[this._initialHeight].value as number;
+      this._objStates[this._ballObjIdx].pos.y = parseFloat(this._systemParams[this._initialHeightIdx].value as string);
       this._objStates[this._ballObjIdx].vel.y = 0.0;
     }
+    this._ballVelys.splice(0);
+    this._ballPosys.splice(0);
+  }
+
+  override historicalData() {
+    let data: any = super.historicalData();
+    data['ball_pos_y'] = this._ballPosys;
+    data['ball_vel_y'] = this._ballVelys;
+    data['energy'] = this._energies;
+    return data;
   }
 }

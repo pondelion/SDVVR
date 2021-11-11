@@ -17,7 +17,6 @@ import { ThreeObject } from '../../types/Three';
 export interface Props {
 };
 
-//const system = new BouncingBallSystem();
 
 const BouncingBallScene: React.FC<Props> = (props: Props) => {
 
@@ -52,7 +51,6 @@ const BouncingBallScene: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     setBallThreeObj(findThreeObj(contextValue, "ball1"));
     setGroundThreeObj(findThreeObj(contextValue, "ground1"));
-    console.log("useef")
     return () => {
       console.log("clearing all")
       system.stop();

@@ -5,6 +5,7 @@ import { addObject } from './ThreeBaseScene';
 import CoordinateAxisScene from './CoordinateAxisScene';
 import { ThreeContext, ThreeContextValue } from '../../contexts/Contexts';
 import { ObjectFactory as OF } from '../../utils/three/ObjectFactory';
+import { Vector3 } from 'three';
 
 
 export interface Props {
@@ -35,6 +36,29 @@ const TestBoxPlaneScene: React.FC<Props> = (props: Props) => {
       'https://threejsfundamentals.org/threejs/resources/images/wall.jpg'
     ),
     objType: 'plane'
+  });
+  addObject(contextValue, {
+    tag: 'line1',
+    obj: OF.createLine(
+      [
+        new Vector3(1.0, 4.0, 2.0),
+        new Vector3(1.0, -4.0, 2.0),
+        new Vector3(-1.0, 4.0, 2.0),
+        new Vector3(1.0, 4.0, -2.0),
+      ],
+      0.0, 0.0, 0.0,
+      "#FF0000"
+    ),
+    objType: 'line'
+  });
+  addObject(contextValue, {
+    tag: 'line_arrow_1',
+    obj: OF.createLineArrow(
+      0.0, 2.0, 0.0,
+      5.0,
+      "#00FF00"
+    ),
+    objType: 'line'
   });
 
   return (

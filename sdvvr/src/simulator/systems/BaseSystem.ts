@@ -18,7 +18,10 @@ export abstract class BaseSystem {
   protected _initialObjStates: ObjectState[] = [];
   protected _objStates: ObjectState[] = [];
   protected _systemParams: Parameter[] = [];
-  private MAX_DT: number = 0.1;
+  protected MAX_DT: number = 0.1;
+  protected MAX_QUEUE: number = 2000;
+
+  protected _ts: number[] = []
 
   constructor(
     initialObjStates: ObjectState[],
@@ -27,7 +30,7 @@ export abstract class BaseSystem {
     this._initialObjStates = initialObjStates;
     this._objStates = clone(initialObjStates);
     this._systemParams = clone(systemParams);
-    this.reset();
+    //this.reset();
   }
 
   /*
@@ -37,6 +40,10 @@ export abstract class BaseSystem {
     if (this._is_running) {
       this._t += dt;
       this._update(Math.min(dt, this.MAX_DT))
+      this._ts.push(this._t);
+      if (this._ts.length > this.MAX_QUEUE) {
+        this._ts.shift();
+      }
     }
   }
 
@@ -59,7 +66,10 @@ export abstract class BaseSystem {
     if (initialObjStates !== undefined) {
       this._initialObjStates = initialObjStates;
       this._objStates = clone(initialObjStates);
+    } else {
+      this._objStates = clone(this._initialObjStates);
     }
+    this._ts.splice(0);
     console.log("simulator reset");
   }
 
@@ -97,5 +107,11 @@ export abstract class BaseSystem {
       }
     }
     throw new Error(`Parameter with name ${name} not found.`);
+  }
+
+  historicalData() {
+    return {
+      'time': this._ts
+    }
   }
 }

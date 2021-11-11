@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { Vector3 } from 'three';
+import SpriteText from 'three-spritetext';
+import { Vec3 } from '../../types/Three';
 
 
 export class ObjectFactory {
@@ -49,7 +52,6 @@ export class ObjectFactory {
     texture_filepath?: string,
   ): THREE.Mesh {
     let matArgs: any = {
-      color: color,
       opacity: opacity,
       transparent: true,
       side: side,
@@ -57,6 +59,8 @@ export class ObjectFactory {
     };
     if (texture_filepath !== undefined) {
       matArgs['map'] = (new THREE.TextureLoader()).load(texture_filepath);
+    } else {
+      matArgs['color'] = color;
     }
     const box = new THREE.Mesh(
         new THREE.BoxGeometry(size_x, size_y, size_z),
@@ -187,6 +191,63 @@ export class ObjectFactory {
     return torus
   }
 
+  static createLine(
+    points: Vec3[],
+    pos_x: number = 0,
+    pos_y: number = 0,
+    pos_z: number = 0,
+    color: number | string = 0x6699FF,
+  ): THREE.Line {
+    const material = new THREE.LineBasicMaterial({
+      color: color
+    });
+    const geometry = new THREE.BufferGeometry().setFromPoints( points );
+    const line = new THREE.Line(geometry, material);
+    line.position.set(pos_x, pos_y, pos_z);
+    return line;
+  }
+
+  static createLineArrow(
+    pos_x: number = 0,
+    pos_y: number = 0,
+    pos_z: number = 0,
+    scale: number = 1.0,
+    color: number | string = 0x6699FF,
+  ): THREE.Line {
+    const points = [
+      new Vector3(-0.5, 0.0, 0.0),
+      new Vector3(0.5, 0.0, 0.0),
+      new Vector3(0.2, 0.2, 0.0),
+      new Vector3(0.2, -0.2, 0.0),
+      new Vector3(0.5, 0.0, 0.0),
+      new Vector3(0.2, 0.0, 0.2),
+      new Vector3(0.2, 0.0, -0.2),
+      new Vector3(0.5, 0.0, 0.0),
+    ]
+    const line = ObjectFactory.createLine(
+      points, pos_x, pos_y, pos_z, color
+    )
+    line.scale.set(scale, scale, scale);
+    return line;
+  }
+
+  static createSpriteText(
+    text: string,
+    pos_x: number = 0,
+    pos_y: number = 0,
+    pos_z: number = 0,
+    scale: number = 1.0,
+    color: string = "#FF0000",
+  ): SpriteText {
+    const st = new SpriteText(text);
+    st.position.set(pos_x, pos_y, pos_z);
+    st.scale.set(scale, scale, scale);
+    st.textHeight = scale;
+    st.color = color;
+    // st.strokeColor = color;
+    // st.borderColor = color;
+    return st;
+  }
 }
 
 export default ObjectFactory;
