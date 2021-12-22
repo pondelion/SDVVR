@@ -133,6 +133,7 @@ const ThreeBaseScene: React.FC<Props> = (props: Props) => {
   renderer.setSize(contextValue.width, contextValue.height);
   renderer.setClearColor(bgColor);
   renderer.shadowMap.enabled = true;
+  renderer.xr.enabled = true;
 
   const update = (dt: number): void => {
     if (contextValue.onUpdate) {
